@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>校园机会雷达</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <div class="brand-mark">R</div>
+          <div>
+            <div class="brand-name">校园机会雷达</div>
+            <div class="brand-sub">发现更适合你的校园成长机会</div>
+          </div>
+        </div>
+        <div class="user-pill">
+          <span>本地用户</span>
+          <strong id="userIdBadge">加载中...</strong>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="hero panel">
+          <div class="hero-copy">
+            <p class="eyebrow">Campus Opportunity Radar</p>
+            <h1>把校园机会看清楚，做出更聪明的选择。</h1>
+            <p class="hero-text">
+              聚合比赛、实习、奖学金、科研、公益与创业机会，帮助你灵活筛选和收藏感兴趣的资源。
+            </p>
+            <div class="cta-row">
+              <button id="jumpToForm" class="primary-btn">上报机会</button>
+              <button id="refreshBtn" class="ghost-btn">刷新列表</button>
+            </div>
+          </div>
+          <div class="hero-metrics">
+            <div class="stat-card">
+              <span class="stat-label">机会总数</span>
+              <strong id="totalCount">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">即将截止</span>
+              <strong id="upcomingCount">0</strong>
+            </div>
+            <div class="stat-card">
+              <span class="stat-label">已收藏</span>
+              <strong id="bookmarkCount">0</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel filters-panel">
+          <div class="control-group">
+            <label for="categoryFilter">分类</label>
+            <select id="categoryFilter">
+              <option value="all">全部</option>
+              <option value="比赛">比赛</option>
+              <option value="实习">实习</option>
+              <option value="奖学金">奖学金</option>
+              <option value="科研">科研</option>
+              <option value="公益">公益</option>
+              <option value="创业">创业</option>
+            </select>
+          </div>
+
+          <div class="control-group wide">
+            <label for="searchInput">关键词</label>
+            <input id="searchInput" type="text" placeholder="搜索标题、机构、关键词" />
+          </div>
+
+          <div class="control-group">
+            <label for="sortSelect">排序</label>
+            <select id="sortSelect">
+              <option value="deadline">截止时间</option>
+              <option value="featured">置顶推荐</option>
+              <option value="newest">最新发布</option>
+            </select>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="panel list-panel">
+            <div class="section-header">
+              <h2>机会列表</h2>
+            </div>
+            <div id="opportunityList" class="opportunity-list"></div>
+          </div>
+
+          <aside class="panel side-panel">
+            <div class="section-header">
+              <h2>新增机会</h2>
+            </div>
+
+            <form id="opportunityForm" class="opportunity-form">
+              <div class="field-group">
+                <label for="titleInput">标题</label>
+                <input id="titleInput" name="title" type="text" required />
+              </div>
+
+              <div class="two-col">
+                <div class="field-group">
+                  <label for="categoryInput">分类</label>
+                  <select id="categoryInput" name="category" required>
+                    <option value="">请选择</option>
+                    <option value="比赛">比赛</option>
+                    <option value="实习">实习</option>
+                    <option value="奖学金">奖学金</option>
+                    <option value="科研">科研</option>
+                    <option value="公益">公益</option>
+                    <option value="创业">创业</option>
+                  </select>
+                </div>
+
+                <div class="field-group">
+                  <label for="deadlineInput">截止时间</label>
+                  <input id="deadlineInput" name="deadline" type="date" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="institutionInput">机构/学校</label>
+                <input id="institutionInput" name="institution" type="text" required />
+              </div>
+
+              <div class="two-col">
+                <div class="field-group">
+                  <label for="locationInput">地点</label>
+                  <input id="locationInput" name="location" type="text" placeholder="如：校内 / 北京" />
+                </div>
+
+                <div class="field-group">
+                  <label for="typeInput">类型</label>
+                  <input id="typeInput" name="type" type="text" placeholder="如：项目 / 训练营" />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="urlInput">链接</label>
+                <input id="urlInput" name="url" type="url" placeholder="https://example.com" />
+              </div>
+
+              <div class="field-group">
+                <label for="tagsInput">标签</label>
+                <input id="tagsInput" name="tags" type="text" placeholder="如：AI, 实习, 项目" />
+              </div>
+
+              <div class="field-group">
+                <label for="sourceInput">来源</label>
+                <input id="sourceInput" name="source" type="text" placeholder="如：学院公告 / 官方平台" />
+              </div>
+
+              <div class="field-group">
+                <label for="descriptionInput">说明</label>
+                <textarea id="descriptionInput" name="description" rows="4" placeholder="请简要介绍机会内容和亮点"></textarea>
+              </div>
+
+              <button type="submit" class="primary-btn full-width">提交机会</button>
+            </form>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>
