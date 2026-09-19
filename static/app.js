@@ -372,37 +372,57 @@ function bindEvents() {
   const closeBtn = document.getElementById('closeDetail');
   const modal = document.getElementById('detailModal');
 
-  searchInput.addEventListener('input', (event) => {
-    state.filters.search = event.target.value.trim();
-    refreshActivities();
-  });
+  if (searchInput) {
+    searchInput.addEventListener('input', (event) => {
+      state.filters.search = event.target.value.trim();
+      refreshActivities();
+    });
+  }
 
-  typeSelect.addEventListener('change', (event) => {
-    state.filters.type = event.target.value;
-    refreshActivities();
-  });
+  if (typeSelect) {
+    typeSelect.addEventListener('change', (event) => {
+      state.filters.type = event.target.value;
+      refreshActivities();
+    });
+  }
 
-  sourceSelect.addEventListener('change', (event) => {
-    state.filters.source = event.target.value;
-    refreshActivities();
-  });
+  if (sourceSelect) {
+    sourceSelect.addEventListener('change', (event) => {
+      state.filters.source = event.target.value;
+      refreshActivities();
+    });
+  }
 
-  statusSelect.addEventListener('change', (event) => {
-    state.filters.status = event.target.value;
-    refreshActivities();
-  });
+  if (statusSelect) {
+    statusSelect.addEventListener('change', (event) => {
+      state.filters.status = event.target.value;
+      refreshActivities();
+    });
+  }
 
-  refreshBtn.addEventListener('click', refreshActivities);
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', refreshActivities);
+  }
 
-  newStudentBtn.addEventListener('change', (event) => {
-    document.body.classList.toggle('new-student-mode', event.target.checked);
-  });
+  if (newStudentBtn) {
+    newStudentBtn.addEventListener('change', (event) => {
+      document.body.classList.toggle('new-student-mode', event.target.checked);
+    });
+  }
 
-  publishForm.addEventListener('submit', submitPublish);
-  closeBtn.addEventListener('click', closeDetail);
-  modal.addEventListener('click', (event) => {
-    if (event.target === modal) closeDetail();
-  });
+  if (publishForm) {
+    publishForm.addEventListener('submit', submitPublish);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeDetail);
+  }
+
+  if (modal) {
+    modal.addEventListener('click', (event) => {
+      if (event.target === modal) closeDetail();
+    });
+  }
 
   document.querySelectorAll('.chip').forEach((chip) => {
     chip.addEventListener('click', () => {
@@ -421,7 +441,10 @@ function bindEvents() {
 
 document.addEventListener('DOMContentLoaded', () => {
   getUserId();
-  document.getElementById('newStudentMode').checked = false;
+  const modeToggle = document.getElementById('newStudentMode');
+  if (modeToggle) {
+    modeToggle.checked = false;
+  }
   bindEvents();
   refreshActivities();
 });
