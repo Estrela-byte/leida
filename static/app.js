@@ -59,6 +59,20 @@ function formatDeadline(deadline) {
   return `截止：${text}（${label}）`;
 }
 
+function normalizeActivities(data) {
+  return (Array.isArray(data) ? data : []).map((item) => ({
+    ...item,
+    missing_info: Array.isArray(item.missing_info) ? item.missing_info : [],
+    risk_note: item.risk_note || '',
+    favorite: false,
+    signed_up: false,
+    source: item.source || '学生个人发布',
+    status: item.status || '待定',
+    type: item.type || '活动',
+    description: item.description || '暂无详细说明'
+  }));
+}
+
 function calculateMatch(activity) {
   let score = 72;
   const text = `${activity.title || ''} ${activity.description || ''} ${activity.target || ''} ${activity.requirements || ''} ${activity.type || ''}`.toLowerCase();
@@ -78,7 +92,6 @@ function calculateMatch(activity) {
   if ((activity.status || '').includes('待核实')) score -= 15;
   if ((activity.status || '').includes('长期')) score += 5;
   if (activity.is_user_published) score -= 10;
-
   if ((activity.missing_info || []).length >= 3) score -= 10;
   if ((activity.risk_note || '').length > 0) score -= 8;
 
@@ -283,65 +296,50 @@ function closeDetail() {
   if (modal) modal.classList.add('hidden');
 }
 
-async function fetchActivities() {
-  const params = new URLSearchParams({
-    user_id: getUserId(),
-    type: state.filters.type,
-    source: state.filters.source,
-    status: state.filters.status,
-    search: state.filters.search
-  });
+function getFilteredActivities() {
+  const search = state.filters.search.trim().toLowerCase();
+  const activities = normalizeActivities(window.CAMPUS_ACTIVITIES || []);
 
-  const response = await fetch(`/api/activities?${params.toString()}`);
-  const data = await response.json();
-  state.activities = Array.isArray(data) ? data : [];
+  return activities.filter((activity) => {
+    const matchesType = !state.filters.type || activity.type === state.filters.type;
+    const matchesSource = !state.filters.source || activity.source === state.filters.source;
+    const matchesStatus = !state.filters.status || String(activity.status).includes(state.filters.status);
+    const text = [activity.title, activity.organizer, activity.target, activity.description, activity.requirements].join(' ').toLowerCase();
+    const matchesSearch = !search || text.includes(search);
+    return matchesType && matchesSource && matchesStatus && matchesSearch;
+  });
+}
+
+function refreshActivities() {
+  state.activities = getFilteredActivities();
   renderActivities();
 }
 
-async function toggleFavorite(activityId) {
-  const response = await fetch('/api/favorite', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user_id: getUserId(), activity_id: activityId })
-  });
-
-  const result = await response.json();
-  if (!response.ok || !result.success) {
-    alert(result.message || '收藏失败');
-    return;
-  }
-
-  await fetchActivities();
+function toggleFavorite(activityId) {
+  const activity = state.activities.find((item) => Number(item.id) === Number(activityId));
+  if (!activity) return;
+  activity.favorite = !activity.favorite;
+  renderActivities();
 }
 
-async function toggleSignup(activityId) {
-  const response = await fetch('/api/signup', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user_id: getUserId(), activity_id: activityId })
-  });
-
-  const result = await response.json();
-  if (!response.ok || !result.success) {
-    alert(result.message || '报名失败');
-    return;
-  }
-
-  await fetchActivities();
+function toggleSignup(activityId) {
+  const activity = state.activities.find((item) => Number(item.id) === Number(activityId));
+  if (!activity) return;
+  activity.signed_up = !activity.signed_up;
+  renderActivities();
 }
 
-async function submitPublish(event) {
+function submitPublish(event) {
   event.preventDefault();
   const form = event.currentTarget;
-
   const payload = {
-    user_id: getUserId(),
+    id: Date.now(),
     title: form.title.value.trim(),
     type: form.type.value.trim() || '活动',
     source: form.source.value.trim() || '学生个人发布',
     organizer: form.organizer.value.trim() || '学生发布',
     target: form.target.value.trim() || '在校学生',
-    start_time: form.start_time.value.trim(),
+    start_time: form.start_time.value.trim() || '待定',
     deadline: form.deadline.value.trim() || '待定',
     location: form.location.value.trim() || '待定',
     fee: form.fee.value.trim() || '待定',
@@ -349,23 +347,17 @@ async function submitPublish(event) {
     status: form.status.value.trim() || '待审核',
     description: form.description.value.trim(),
     missing_info: [form.missing_info.value.trim()].filter(Boolean),
-    risk_note: form.risk_note.value.trim() || '信息待核实。'
+    risk_note: form.risk_note.value.trim() || '信息待核实。',
+    is_user_published: true,
+    favorite: false,
+    signed_up: false
   };
 
-  const response = await fetch('/api/publish', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-
-  const result = await response.json();
-  if (!response.ok || !result.success) {
-    alert(result.message || '发布失败');
-    return;
-  }
-
+  const list = window.CAMPUS_ACTIVITIES || [];
+  list.unshift(payload);
+  window.CAMPUS_ACTIVITIES = list;
   form.reset();
-  await fetchActivities();
+  refreshActivities();
   alert('活动已成功发布，已进入活动列表。');
 }
 
@@ -382,25 +374,25 @@ function bindEvents() {
 
   searchInput.addEventListener('input', (event) => {
     state.filters.search = event.target.value.trim();
-    fetchActivities();
+    refreshActivities();
   });
 
   typeSelect.addEventListener('change', (event) => {
     state.filters.type = event.target.value;
-    fetchActivities();
+    refreshActivities();
   });
 
   sourceSelect.addEventListener('change', (event) => {
     state.filters.source = event.target.value;
-    fetchActivities();
+    refreshActivities();
   });
 
   statusSelect.addEventListener('change', (event) => {
     state.filters.status = event.target.value;
-    fetchActivities();
+    refreshActivities();
   });
 
-  refreshBtn.addEventListener('click', fetchActivities);
+  refreshBtn.addEventListener('click', refreshActivities);
 
   newStudentBtn.addEventListener('change', (event) => {
     document.body.classList.toggle('new-student-mode', event.target.checked);
@@ -422,14 +414,14 @@ function bindEvents() {
         state.selectedTags.add(value);
       }
       chip.classList.toggle('active', state.selectedTags.has(value));
-      fetchActivities();
+      refreshActivities();
     });
   });
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
   getUserId();
   document.getElementById('newStudentMode').checked = false;
   bindEvents();
-  await fetchActivities();
+  refreshActivities();
 });
