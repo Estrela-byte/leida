@@ -4,165 +4,138 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>校园机会雷达</title>
-    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/style.css" />
   </head>
   <body>
-    <div class="page-shell">
+    <div class="shell">
       <header class="topbar">
-        <div class="brand-wrap">
+        <div class="brand">
           <div class="brand-mark">R</div>
           <div>
             <div class="brand-name">校园机会雷达</div>
-            <div class="brand-sub">发现更适合你的校园成长机会</div>
+            <div class="brand-sub">发现适合你的校园活动与机会</div>
           </div>
         </div>
-        <div class="user-pill">
-          <span>本地用户</span>
-          <strong id="userIdBadge">加载中...</strong>
+
+        <div class="header-tools">
+          <div class="search-box">
+            <span class="search-icon">🔎</span>
+            <input id="searchInput" type="text" placeholder="搜索活动、主办方、对象或关键词" />
+          </div>
+
+          <label class="mode-toggle">
+            <input id="newStudentMode" type="checkbox" />
+            <span>新生模式</span>
+          </label>
         </div>
       </header>
 
-      <main class="layout">
-        <section class="hero panel">
-          <div class="hero-copy">
-            <p class="eyebrow">Campus Opportunity Radar</p>
-            <h1>把校园机会看清楚，做出更聪明的选择。</h1>
-            <p class="hero-text">
-              聚合比赛、实习、奖学金、科研、公益与创业机会，帮助你灵活筛选和收藏感兴趣的资源。
-            </p>
-            <div class="cta-row">
-              <button id="jumpToForm" class="primary-btn">上报机会</button>
-              <button id="refreshBtn" class="ghost-btn">刷新列表</button>
-            </div>
+      <section class="filters-panel">
+        <div class="field">
+          <label for="typeFilter">活动类型</label>
+          <select id="typeFilter">
+            <option value="">全部</option>
+            <option value="招新">招新</option>
+            <option value="培训 / 实践">培训 / 实践</option>
+            <option value="学习交流">学习交流</option>
+            <option value="项目 / 竞赛">项目 / 竞赛</option>
+            <option value="招募">招募</option>
+            <option value="讲座 / 交流">讲座 / 交流</option>
+            <option value="个人发布 / 招募">个人发布 / 招募</option>
+            <option value="营销 / 推广">营销 / 推广</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="sourceFilter">信息来源</label>
+          <select id="sourceFilter">
+            <option value="">全部</option>
+            <option value="校内组织">校内组织</option>
+            <option value="学生个人发布">学生个人发布</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="statusFilter">状态</label>
+          <select id="statusFilter">
+            <option value="">全部</option>
+            <option value="招新中">招新中</option>
+            <option value="待审核">待审核</option>
+            <option value="待核实">待核实</option>
+            <option value="长期招募中">长期招募中</option>
+            <option value="持续进行中">持续进行中</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>个人条件</label>
+          <div class="chip-list">
+            <button class="chip active" type="button" data-tag="开发">开发</button>
+            <button class="chip active" type="button" data-tag="学习">学习</button>
+            <button class="chip active" type="button" data-tag="设计">设计</button>
           </div>
-          <div class="hero-metrics">
-            <div class="stat-card">
-              <span class="stat-label">机会总数</span>
-              <strong id="totalCount">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">即将截止</span>
-              <strong id="upcomingCount">0</strong>
-            </div>
-            <div class="stat-card">
-              <span class="stat-label">已收藏</span>
-              <strong id="bookmarkCount">0</strong>
-            </div>
+        </div>
+
+        <div class="field">
+          <label>操作</label>
+          <button id="refreshBtn" class="secondary-btn" type="button">刷新列表</button>
+        </div>
+      </section>
+
+      <main class="content-layout">
+        <section class="main-column">
+          <div class="section-title">
+            <h2>活动列表</h2>
           </div>
+          <div id="activityList" class="activity-list"></div>
         </section>
 
-        <section class="panel filters-panel">
-          <div class="control-group">
-            <label for="categoryFilter">分类</label>
-            <select id="categoryFilter">
-              <option value="all">全部</option>
-              <option value="比赛">比赛</option>
-              <option value="实习">实习</option>
-              <option value="奖学金">奖学金</option>
-              <option value="科研">科研</option>
-              <option value="公益">公益</option>
-              <option value="创业">创业</option>
-            </select>
-          </div>
-
-          <div class="control-group wide">
-            <label for="searchInput">关键词</label>
-            <input id="searchInput" type="text" placeholder="搜索标题、机构、关键词" />
-          </div>
-
-          <div class="control-group">
-            <label for="sortSelect">排序</label>
-            <select id="sortSelect">
-              <option value="deadline">截止时间</option>
-              <option value="featured">置顶推荐</option>
-              <option value="newest">最新发布</option>
-            </select>
-          </div>
-        </section>
-
-        <section class="content-grid">
-          <div class="panel list-panel">
-            <div class="section-header">
-              <h2>机会列表</h2>
+        <aside class="sidebar">
+          <div class="card personal-card">
+            <h3>个人条件设置</h3>
+            <div class="chip-list">
+              <span class="chip active">大一</span>
+              <span class="chip active">技术方向</span>
+              <span class="chip">公益</span>
+              <span class="chip">科研</span>
+              <span class="chip">校外实习</span>
             </div>
-            <div id="opportunityList" class="opportunity-list"></div>
           </div>
 
-          <aside class="panel side-panel">
-            <div class="section-header">
-              <h2>新增机会</h2>
-            </div>
-
-            <form id="opportunityForm" class="opportunity-form">
-              <div class="field-group">
-                <label for="titleInput">标题</label>
-                <input id="titleInput" name="title" type="text" required />
-              </div>
-
-              <div class="two-col">
-                <div class="field-group">
-                  <label for="categoryInput">分类</label>
-                  <select id="categoryInput" name="category" required>
-                    <option value="">请选择</option>
-                    <option value="比赛">比赛</option>
-                    <option value="实习">实习</option>
-                    <option value="奖学金">奖学金</option>
-                    <option value="科研">科研</option>
-                    <option value="公益">公益</option>
-                    <option value="创业">创业</option>
-                  </select>
-                </div>
-
-                <div class="field-group">
-                  <label for="deadlineInput">截止时间</label>
-                  <input id="deadlineInput" name="deadline" type="date" />
-                </div>
-              </div>
-
-              <div class="field-group">
-                <label for="institutionInput">机构/学校</label>
-                <input id="institutionInput" name="institution" type="text" required />
-              </div>
-
-              <div class="two-col">
-                <div class="field-group">
-                  <label for="locationInput">地点</label>
-                  <input id="locationInput" name="location" type="text" placeholder="如：校内 / 北京" />
-                </div>
-
-                <div class="field-group">
-                  <label for="typeInput">类型</label>
-                  <input id="typeInput" name="type" type="text" placeholder="如：项目 / 训练营" />
-                </div>
-              </div>
-
-              <div class="field-group">
-                <label for="urlInput">链接</label>
-                <input id="urlInput" name="url" type="url" placeholder="https://example.com" />
-              </div>
-
-              <div class="field-group">
-                <label for="tagsInput">标签</label>
-                <input id="tagsInput" name="tags" type="text" placeholder="如：AI, 实习, 项目" />
-              </div>
-
-              <div class="field-group">
-                <label for="sourceInput">来源</label>
-                <input id="sourceInput" name="source" type="text" placeholder="如：学院公告 / 官方平台" />
-              </div>
-
-              <div class="field-group">
-                <label for="descriptionInput">说明</label>
-                <textarea id="descriptionInput" name="description" rows="4" placeholder="请简要介绍机会内容和亮点"></textarea>
-              </div>
-
-              <button type="submit" class="primary-btn full-width">提交机会</button>
+          <div class="card publish-card">
+            <h3>学生发布</h3>
+            <form id="publishForm" class="publish-form">
+              <input type="text" name="title" placeholder="活动标题" required />
+              <input type="text" name="type" placeholder="活动类型，如：招新/讲座/项目" />
+              <input type="text" name="source" placeholder="来源：校内组织/学生个人发布" />
+              <input type="text" name="organizer" placeholder="主办方" />
+              <input type="text" name="target" placeholder="面向对象" />
+              <input type="text" name="start_time" placeholder="开始时间" />
+              <input type="text" name="deadline" placeholder="截止时间" />
+              <input type="text" name="location" placeholder="活动地点" />
+              <input type="text" name="fee" placeholder="费用/是否免费" />
+              <input type="text" name="status" placeholder="状态，如：招新中/待审核" />
+              <textarea name="requirements" placeholder="参与要求"></textarea>
+              <textarea name="description" placeholder="活动简介" required></textarea>
+              <textarea name="missing_info" placeholder="缺失信息（可选）"></textarea>
+              <textarea name="risk_note" placeholder="风险提醒（可选）"></textarea>
+              <button class="primary-btn" type="submit">发布活动</button>
             </form>
-          </aside>
-        </section>
+          </div>
+        </aside>
       </main>
     </div>
 
-    <script src="/static/js/app.js"></script>
+    <div id="detailModal" class="modal hidden" aria-hidden="true">
+      <div class="modal-panel">
+        <div class="modal-header">
+          <h3 data-role="detail-title">活动详情</h3>
+          <button id="closeDetail" class="close-btn" type="button" aria-label="关闭">×</button>
+        </div>
+        <div data-role="detail-body"></div>
+      </div>
+    </div>
+
+    <script src="/static/app.js"></script>
   </body>
 </html>
