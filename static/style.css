@@ -32,23 +32,13 @@ body {
   position: relative;
   margin: 0;
   min-height: 100vh;
-  background:
-    linear-gradient(180deg, rgba(17, 35, 53, 0.42), rgba(244, 248, 252, 0.72)),
-    linear-gradient(90deg, rgba(19, 52, 82, 0.14), rgba(255, 255, 255, 0.06)),
-    url('./campus-bg.svg') center top / cover no-repeat fixed;
+  background: #ffffff;
   color: var(--text);
   font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
 }
 
 body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 14% 18%, rgba(255,255,255,0.52), transparent 20%),
-    radial-gradient(circle at 82% 12%, rgba(111, 180, 255, 0.24), transparent 18%),
-    radial-gradient(circle at 70% 78%, rgba(25, 78, 60, 0.18), transparent 28%);
-  pointer-events: none;
+  content: none;
 }
 
 button,
@@ -95,13 +85,7 @@ textarea {
 }
 
 .shell::before {
-  content: '';
-  position: absolute;
-  inset: 18px 8px auto 8px;
-  height: 120px;
-  border-radius: 30px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0));
-  pointer-events: none;
+  content: none;
 }
 
 .topbar {
@@ -113,11 +97,10 @@ textarea {
   align-items: center;
   margin-bottom: 18px;
   padding: 18px 22px;
-  border-radius: 28px;
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  box-shadow: 0 18px 42px rgba(10, 28, 54, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(216, 225, 239, 0.95);
+  box-shadow: 0 8px 20px rgba(16, 31, 57, 0.03);
 }
 
 .brand {
@@ -146,8 +129,8 @@ textarea {
 }
 
 .brand-name {
-  color: #f3f7ff;
-  text-shadow: 0 3px 18px rgba(7, 36, 88, 0.4);
+  color: #1d2433;
+  text-shadow: none;
   font-size: clamp(1.3rem, 2vw, 1.8rem);
   font-weight: 800;
   letter-spacing: 0.02em;
@@ -155,7 +138,7 @@ textarea {
 
 .brand-sub {
   font-size: 0.8rem;
-  color: rgba(245, 248, 255, 0.9);
+  color: var(--muted);
 }
 
 .header-tools {
@@ -203,6 +186,60 @@ textarea {
   accent-color: var(--primary);
 }
 
+.hero-showcase {
+  position: relative;
+  z-index: 1;
+  height: 330px;
+  border-radius: 24px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  border: 1px solid rgba(210, 219, 234, 0.95);
+  background: linear-gradient(180deg, rgba(9, 25, 44, 0.18), rgba(9, 25, 44, 0.38)),
+    url('./campus-bg.svg') center center / cover no-repeat;
+  box-shadow: 0 18px 38px rgba(15, 30, 56, 0.08);
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  padding: 28px 28px 24px;
+  background: linear-gradient(180deg, rgba(8, 25, 40, 0.12), rgba(8, 25, 40, 0.6));
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f8fbff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.hero-overlay h1 {
+  margin: 14px 0 8px;
+  max-width: 560px;
+  color: #ffffff;
+  font-size: clamp(1.8rem, 2.5vw, 2.7rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.hero-overlay p {
+  margin: 0;
+  max-width: 620px;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.98rem;
+  line-height: 1.7;
+}
+
 .quick-filter-bar {
   position: relative;
   z-index: 1;
@@ -227,14 +264,14 @@ textarea {
 .quick-pill {
   flex: 0 0 auto;
   border: 1px solid rgba(31, 107, 255, 0.12);
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(244, 247, 252, 0.85);
   color: var(--text);
   padding: 10px 14px;
   border-radius: 999px;
   font-weight: 700;
   white-space: nowrap;
   transition: all 0.2s ease;
-  box-shadow: 0 8px 18px rgba(20, 42, 90, 0.03), inset 0 1px 0 rgba(255,255,255,0.8);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.8);
 }
 
 .quick-pill:hover {
@@ -255,13 +292,13 @@ textarea {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(212, 218, 230, 0.8);
+  background: rgba(248, 249, 252, 0.92);
+  border: 1px solid rgba(212, 218, 230, 0.9);
   border-radius: var(--radius-lg);
   padding: 18px;
-  box-shadow: 0 18px 42px rgba(12, 34, 66, 0.08), inset 0 1px 0 rgba(255,255,255,0.68);
+  box-shadow: 0 12px 28px rgba(12, 34, 66, 0.05), inset 0 1px 0 rgba(255,255,255,0.88);
   margin-bottom: 22px;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(10px);
 }
 
 .field {
@@ -286,11 +323,11 @@ textarea {
 .sidebar .card {
   position: relative;
   z-index: 1;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(212, 218, 230, 0.85);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(214, 221, 234, 0.9);
   border-radius: var(--radius-lg);
-  box-shadow: 0 16px 34px rgba(18, 31, 58, 0.08), inset 0 1px 0 rgba(255,255,255,0.75);
-  backdrop-filter: blur(9px);
+  box-shadow: 0 10px 24px rgba(18, 31, 58, 0.04), inset 0 1px 0 rgba(255,255,255,0.82);
+  backdrop-filter: blur(7px);
 }
 
 .main-column {
@@ -701,12 +738,20 @@ textarea {
 }
 
 @media (max-width: 680px) {
-  body {
-    background-attachment: scroll;
-  }
-
   .shell {
     padding: 14px 12px 32px;
+  }
+
+  .hero-showcase {
+    height: 240px;
+  }
+
+  .hero-overlay {
+    padding: 18px 18px 20px;
+  }
+
+  .hero-overlay h1 {
+    font-size: 1.8rem;
   }
 
   .topbar {
