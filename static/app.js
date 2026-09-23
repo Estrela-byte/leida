@@ -371,6 +371,7 @@ function bindEvents() {
   const publishForm = document.getElementById('publishForm');
   const closeBtn = document.getElementById('closeDetail');
   const modal = document.getElementById('detailModal');
+  const quickPills = document.querySelectorAll('.quick-pill');
 
   if (searchInput) {
     searchInput.addEventListener('input', (event) => {
@@ -423,6 +424,21 @@ function bindEvents() {
       if (event.target === modal) closeDetail();
     });
   }
+
+  quickPills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      const value = pill.dataset.value || '';
+      const isAll = value === '';
+      state.filters.type = isAll ? '' : value;
+
+      if (typeSelect) {
+        typeSelect.value = value;
+      }
+
+      quickPills.forEach((item) => item.classList.toggle('active', item === pill));
+      refreshActivities();
+    });
+  });
 
   document.querySelectorAll('.chip').forEach((chip) => {
     chip.addEventListener('click', () => {
